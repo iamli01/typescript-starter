@@ -1,5 +1,5 @@
 
-import { Controller, Param, Get, Post, Put, Delete, Res, HttpStatus, HttpException, ParseIntPipe } from '@nestjs/common';
+import { Controller, Param, Get, Post, Put, Delete, Res, HttpStatus, HttpException, ParseIntPipe, Body } from '@nestjs/common';
 import { User } from './interfaces/mytest.interface';
 import { get } from 'https';
 import { IMytestService } from './interfaces/mytest-service.interface';
@@ -75,33 +75,30 @@ export class MytestController {
     // controller 中，应该只负责请求的分发，所以下面的方法中，会把参数的验证放在管道中
 */
 
+    //#endregion
     @Get(':id')
     //async findOne(@Param('id', new ParseIntPipe()) id): Promise<User> {   // 改为自定义的管道
     async findOne(@Param('id', new MytestIdPipe()) id): Promise<User> {
         return await this.mytestService.findOne(id);
     }
-
-    //#endregion
-
-
+   
     @Post()
-    async create() {
-        return await this.mytestService.create();
+    async create(@Body() user:User): Promise<User> {
+        return await this.mytestService.create(user);
     }
 
     @Put()
-    async edit() {
-        return await this.mytestService.edit();
+    async edit(@Body() user: User): Promise<User> {
+        return await this.mytestService.edit(user);
     }
 
-    @Delete()
-    async remove() {
-        return await this.mytestService.remove();
+    @Delete(':id')
+    async remove(@Param('id', new MytestIdPipe()) id) {
+        return await this.mytestService.remove(id);
     }
 
+//#region  最原始的做法
     /*
-
-
     @Get(':num')
     async findOne(@Param() params): Promise<User> {
         console.log("request findOne： " + params.num );        
@@ -127,4 +124,6 @@ export class MytestController {
         // TODO：删除已有用户
     }
 */
+//#endregion
+
 }
