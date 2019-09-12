@@ -1,17 +1,14 @@
-
-import { Controller, Param, Get, Post, Put, Delete, Res, HttpStatus, HttpException, ParseIntPipe, Body } from '@nestjs/common';
+import { Controller, Param, Get, Post, Put, Delete, Body, UsePipes } from '@nestjs/common';
 import { User } from './interfaces/mytest.interface';
-import { get } from 'https';
-import { IMytestService } from './interfaces/mytest-service.interface';
 import { MytestService } from './services/mytest.service';
-import { ApiException } from 'src/common/exceptions/api.exception';
-import { ApiErrorCode } from 'src/common/enums/api-error-code.enum';
 import { MytestIdPipe } from './pipes/mytest-id.pipe';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { ApiParamsValidationPipe } from 'src/common/pipes/api-params-validation.pipe';
 
 @Controller('mytest')
 export class MytestController {
 
-    constructor(private readonly mytestService: MytestService) { }
+    constructor(private readonly mytestService: MytestService) {  }
 
     @Get()
     async findAll(): Promise<User[]> {
@@ -76,6 +73,7 @@ export class MytestController {
 */
 
     //#endregion
+    
     @Get(':id')
     //async findOne(@Param('id', new ParseIntPipe()) id): Promise<User> {   // 改为自定义的管道
     async findOne(@Param('id', new MytestIdPipe()) id): Promise<User> {
@@ -83,12 +81,12 @@ export class MytestController {
     }
    
     @Post()
-    async create(@Body() user:User): Promise<User> {
+    async create(@Body() user: CreateUserDto): Promise<User> {
         return await this.mytestService.create(user);
     }
 
     @Put()
-    async edit(@Body() user: User): Promise<User> {
+    async edit(@Body() user: CreateUserDto): Promise<User> {
         return await this.mytestService.edit(user);
     }
 

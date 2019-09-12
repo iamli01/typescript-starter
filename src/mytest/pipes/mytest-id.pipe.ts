@@ -4,18 +4,9 @@ import { ApiErrorCode } from 'src/common/enums/api-error-code.enum';
 
 @Injectable()
 export class MytestIdPipe implements PipeTransform {
-  /*
-  transform(value: any, metadata: ArgumentMetadata) {
-    console.log(value);
-    console.log(metadata);
-    return value;
-  }
-*/
-
   async transform(value: any, metadata: ArgumentMetadata) {
-   
-    console.log(value);
-    console.log(metadata);
+    console.log('MytestIdPipe:' + value);
+    console.log('MytestIdPipe' + metadata);
     value = parseInt(value)
 
     if(isNaN(value) || typeof value !== 'number' || value <= 0) {
